@@ -1,0 +1,101 @@
+﻿@page "/view-user-stats/{id:int}"
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@inject IGameService GameService
+@rendermode InteractiveWebAssembly
+
+<h3 class="text-2xl font-bold text-gray-800 mb-4">User Stats Dashboard</h3>
+
+@if (game == null)
+{
+    <div class="flex justify-center items-center">
+        <span class="text-gray-500">Loading...</span>
+    </div>
+}
+else
+{
+    @* <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8"> *@
+    <!-- Basic Account Information -->
+    <div class="p-4 bg-white rounded-lg shadow-md border border-gray-200">
+        <h4 class="text-lg font-semibold text-gray-700">Account Information</h4>
+        <p>
+            <strong>Username:</strong> @game.Username
+        </p>
+        <p>
+            <strong>Email:</strong> @game.Email
+        </p>
+    </div>
+
+    <!-- Player Stats -->
+    <div class="p-4 bg-white rounded-lg shadow-md border border-gray-200">
+        <h4 class="text-lg font-semibold text-gray-700">Player Stats</h4>
+        <p>
+            <strong>Current Level:</strong> @game.CurrentLevel
+        </p>
+        <p>
+            <strong>Experience Points:</strong> @game.ExperiencePoints
+        </p>
+        <p>
+            <strong>XP to Next Level:</strong> @game.ExperiencePointsToNextLevel
+        </p>
+    </div>
+
+    <!-- Game Performance -->
+    <div class="p-4 bg-white rounded-lg shadow-md border border-gray-200">
+        <h4 class="text-lg font-semibold text-gray-700">Game Performance</h4>
+        <p>
+            <strong>Total Games Played:</strong> @game.TotalGamesPlayed
+        </p>
+        <p>
+            <strong>Total Wins:</strong> @game.TotalWins
+        </p>
+        <p>
+            <strong>Total Losses:</strong> @game.TotalLosses
+        </p>
+        <p><strong>Win/Loss Ratio:</strong> @(Math.Round(game.WinLossRatio * 100, 2))%</p>
+    </div>
+
+    <!-- Community Interaction -->
+<div class="p-4 bg-white rounded-lg shadow-md border border-gray-200">
+    <h4 class="text-lg font-semibold text-gray-700">Community Interaction</h4>
+        <!-- Friends Count -->
+        <p>
+            <strong>Friends Count:</strong> @game.FriendsCount
+        </p>
+
+        <!-- Messages Sent and Received -->
+        <p>
+            <strong> Messages Sent:</strong>@game.MessagesSent
+        </p>
+
+        <!-- Messages Received -->
+    <p>
+        <strong> Messages Received:</strong> @game.MessagesReceived
+    </p>
+    </div>
+
+    <!--Optional: Display detailed stats in a table format using QuickGrid  -->
+    @* <QuickGrid Items="@(new List<Game> { game }.AsQueryable())" class="table table-striped"> *@
+    @*     <PropertyColumn Property="@(g => g.Username)" Title="Usernames"/> *@
+    @*     <PropertyColumn Property="@(g => g.Email)" Title="Emails"/> *@
+    @*     <PropertyColumn Property="@(g => g.CurrentLevel)" Title="Current Levels"/> *@
+    @*     <PropertyColumn Property="@(g => g.ExperiencePoints)" Title="Experience Points"/> *@
+    @*     <PropertyColumn Property="@(g => g.ExperiencePointsToNextLevel)" Title="XPs to Next Levels"/> *@
+    @*     <PropertyColumn Property="@(g => game.TotalGamesPlayed)" Title="Total Games Played"/> *@
+    @*     <PropertyColumn Property="@(g => game.TotalWins)" Title="Total Wins"/> *@
+    @*     <PropertyColumn Property="@(g => game.TotalLosses)" Title="Total Losses"/> *@
+    @*     <TemplateColumn Title="Actions"> *@
+    @*         <EditGameButton Id="@context.Id" /> *@
+    @*     </TemplateColumn> *@
+    @* </QuickGrid> *@
+    }
+
+@code {
+    Game game;
+    [Parameter] public int id { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        game = await GameService.GetGameById(id);
+    }
+}

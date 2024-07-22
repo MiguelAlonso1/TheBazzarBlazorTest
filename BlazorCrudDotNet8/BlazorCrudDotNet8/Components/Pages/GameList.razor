@@ -1,4 +1,5 @@
 ﻿@page "/games"
+@using Microsoft.AspNetCore.Components.QuickGrid
 @inject IGameService GameService
 @attribute [StreamRendering(true)]
 
@@ -6,28 +7,35 @@
 
 @if (games == null)
 {
-    <span>Loading...</span>
+<span>Loading...</span>
 }
 else if (games.Count == 0)
 {
-    <span>No user accounts found.</span>
+<span>No user accounts found.</span>
 }
 else
 {
-    <ul>
-        @foreach (var game in games)
-        {
-            <li>@game.Username <EditGameButton Id="game.Id" /></li>
-        }
-    </ul>
+<QuickGrid Items="@(games.AsQueryable())" class="table table-striped">
+    <PropertyColumn Property="@(game => game.Username)" Title="Username" />
+    @* <PropertyColumn Property="@(game => game.Email)" Title="Email" /> *@
+    @* <PropertyColumn Property="@(game => game.CurrentLevel)" Title="Current Level" /> *@
+    @* <PropertyColumn Property="@(game => game.ExperiencePoints)" Title="Experience Points" /> *@
+    @* <PropertyColumn Property="@(game => game.TotalGamesPlayed)" Title="Total Games Played" /> *@
+    <TemplateColumn Title="Edit">
+        <EditGameButton Id="@context.Id" />
+    </TemplateColumn>
+    <TemplateColumn Title="View">
+        <ViewUserStats Id="@context.Id" />
+    </TemplateColumn>
+</QuickGrid>
 }
 <CreateGameButton />
 
 @code {
-    List<Game>? games = null;
+List<Game>? games = null;
 
-    protected override async Task OnInitializedAsync()
-    {
-        games = await GameService.GetAllGames();
-    }
+protected override async Task OnInitializedAsync()
+{
+games = await GameService.GetAllGames();
+}
 }

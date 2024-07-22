@@ -1,0 +1,14 @@
+﻿@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<button @onclick="ViewUserStatsButton" class="btn btn-primary">View User Stats</button>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    void ViewUserStatsButton()
+    {
+        NavigationManager.NavigateTo($"/view-user-stats/{Id}");
+    }
+}
