@@ -1,0 +1,33 @@
+﻿@page "/games"
+@inject IGameService GameService
+@attribute [StreamRendering(true)]
+
+<h3>Users Stats</h3>
+
+@if (games == null)
+{
+    <span>Loading...</span>
+}
+else if (games.Count == 0)
+{
+    <span>No user accounts found.</span>
+}
+else
+{
+    <ul>
+        @foreach (var game in games)
+        {
+            <li>@game.Username <EditGameButton Id="game.Id" /></li>
+        }
+    </ul>
+}
+<CreateGameButton />
+
+@code {
+    List<Game>? games = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        games = await GameService.GetAllGames();
+    }
+}
